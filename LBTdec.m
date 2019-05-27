@@ -1,4 +1,4 @@
-function Z = LBTdec(vlc, qstep, N, M, bits, huffval, dcbits, W, H)
+function Zp = LBTdec(vlc, qstep, s, N, M, bits, huffval, dcbits, W, H)
 
 % JPEGDEC Decodes a (simplified) JPEG bit stream to an image
 %
@@ -20,21 +20,24 @@ function Z = LBTdec(vlc, qstep, N, M, bits, huffval, dcbits, W, H)
 %  Z is the output greyscale image
 
 % Presume some default values if they have not been provided
-error(nargchk(2, 9, nargin, 'struct'));
+error(nargchk(2, 10, nargin, 'struct'));
 opthuff = true;
-if (nargin<9)
+if (nargin<10)
   H = 256;
   W = 256;
-  if (nargin<7)
+  if (nargin<8)
     dcbits = 8;
-    if (nargin<6)
+    if (nargin<7)
       opthuff = false;
-      if (nargin<4)
-        if (nargin<3)
+      if (nargin<5)
+        if (nargin<4)
           N = 8;
           M = 8;
         else
           M = N;
+        end
+        if (nargin<3)
+          s = 1
         end
       else 
         if (mod(M, N)~=0) error('M must be an integer multiple of N'); end
@@ -126,12 +129,16 @@ end
 fprintf(1, 'Inverse quantising to step size of %i\n', qstep);
 Zi=quant2(Zq,qstep,qstep);
 
+%Performing inverse DCT
 fprintf(1, 'Inverse %i x %i DCT\n', N, N);
 C8=dct_ii(N);
 Z=colxfm(colxfm(Zi',C8')',C8');
 
-fprintf(1, 'Inverse %i x %i s= %f LBT\n', N, N, s);
-    Zp = Z;
-    Zp(:,t) = colxfm(Zp(:,t)',Pr')';   
-    Zp(t,:) = colxfm(Zp(t,:),Pr');
+%Performing the pose filtering
+n = W;
+t = [(1+N/2):(n-N/2)];
+[Pf, Pr] = pot_ii(N,s);
+Zp = Z;
+Zp(:,t) = colxfm(Zp(:,t)',Pr')';   
+Zp(t,:) = colxfm(Zp(t,:),Pr');
 return
