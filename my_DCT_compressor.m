@@ -1,4 +1,4 @@
-function my_DCT_compressor(X)
+function [Z_4, Z_8, Z_16, Z_32] = my_DCT_compressor(X)
     N = [4,8,16]
      
     N = 4;
