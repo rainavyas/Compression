@@ -40,7 +40,7 @@ if (nargin<7)
         M = N;
       end
         if (nargin<3)
-          s = 1
+          s = 1;
         end
     else 
       if (mod(M, N)~=0) error('M must be an integer multiple of N'); end
