@@ -9,8 +9,7 @@ MAX_size = 40960;
 X = double(X);
 X = X -128;
 N_list = [4,8,16,32];
-Z_list = [X, X, X, X];
-dc_bits = 16;
+dc_bits = 8;
 
 for i = 1:length(N_list)
     %Arbitrarily set a quantisation level for step size
@@ -26,9 +25,14 @@ for i = 1:length(N_list)
     for s = 1:0.2:2
         for j = 0: (log2(256)-log2(N_list(i)))
             M = N_list(i)*(2^j);
-            bits = my_LBT_bits(X, qstep, s, N_list(i), M, dc_bits);
+            try
+                bits = my_LBT_bits(X, qstep, s, N_list(i), M, 0, dc_bits);
+            
             if bits < best(1)
                 best = [bits, s, M];
+            end
+            catch ME
+                disp("hey I caught an error")
             end
         end
     end
@@ -40,20 +44,25 @@ for i = 1:length(N_list)
     N = N_list(i);
     
     while total_bits> MAX_size
-        
         qstep = qstep + 1;
-        total_bits = my_LBT_bits(X, qstep, s, N, M, dc_bits);
+        try 
+            total_bits = my_LBT_bits(X, qstep, s, N, M, 0, dc_bits);
+        catch ME
+            disp("caught error")
+        end
     end
     
     % Decode the vlc information
-    [vlc, bits, huffval] = LBTenc(X, qstep, s, N, M, 0, dc_bits);
+    [vlc, bits, huffval] = LBTenc_vyas(X, qstep, s, N, M, 0, dc_bits);
     Zp = LBTdec(vlc, qstep, s, N, M, bits, huffval, dc_bits);
     
     %Find the SSIM to original X
     SSIM = ssim(Zp, X);
+    
+    qstep = qstep -1;
       
     % Display resulst
-    disp("N: "+ N+ ", bits: "+ total_bits+ ", s: "+ s+ ", M: "+M+ ", ssim: "+SSIM);
+    disp("N: "+ N+ ", bits: "+ total_bits+ ", s: "+ s+ ", M: "+M+ ", ssim: "+SSIM + ", step: "+ qstep);
     
     figure(N);
     draw(Zp);
