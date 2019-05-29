@@ -49,7 +49,7 @@ scan = diagscan(M);
 if (opthuff)
   disp('Generating huffcode and ehuf using custom tables')
 else
-  disp('Generating huffcode and ehuf using default tables')
+  %disp('Generating huffcode and ehuf using default tables')
   [bits huffval] = huffdflt(1);
 end
 % Define starting addresses of each new code length in huffcode.
@@ -74,7 +74,7 @@ i = 1;
 Zq = zeros(H, W);
 t=1:M;
 
-disp('Decoding rows')
+%disp('Decoding rows')
 for r=0:M:(H-M),
   for c=0:M:(W-M),
     yq = zeros(M,M);
@@ -123,10 +123,10 @@ for r=0:M:(H-M),
   end
 end
 
-fprintf(1, 'Inverse quantising to step size of %i\n', qstep);
+%fprintf(1, 'Inverse quantising to step size of %i\n', qstep);
 Zi=quant2(Zq,qstep,qstep);
 
-fprintf(1, 'Inverse %i x %i DCT\n', N, N);
+%fprintf(1, 'Inverse %i x %i DCT\n', N, N);
 C8=dct_ii(N);
 Z=colxfm(colxfm(Zi',C8')',C8');
 

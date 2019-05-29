@@ -59,25 +59,25 @@ Xp(t,:) = colxfm(Xp(t,:),Pf);
 Xp(:,t) = colxfm(Xp(:,t)',Pf)';
 
 % DCT on input image X.
-fprintf(1, 'Forward %i x %i DCT\n', N, N);
+%fprintf(1, 'Forward %i x %i DCT\n', N, N);
 C8=dct_ii(N);
 Y=colxfm(colxfm(X,C8)',C8)'; 
 
 % Quantise to integers.
-fprintf(1, 'Quantising to step size of %i\n', qstep); 
+%fprintf(1, 'Quantising to step size of %i\n', qstep); 
 Yq=quant1(Y,qstep,qstep);
 
 % Generate zig-zag scan of AC coefs.
 scan = diagscan(M);
 
 % On the first pass use default huffman tables.
-disp('Generating huffcode and ehuf using default tables')
+%disp('Generating huffcode and ehuf using default tables')
 [dbits, dhuffval] = huffdflt(1);  % Default tables.
 [huffcode, ehuf] = huffgen(dbits, dhuffval);
 
 % Generate run/ampl values and code them into vlc(:,1:2).
 % Also generate a histogram of code symbols.
-disp('Coding rows')
+%disp('Coding rows')
 sy=size(Yq);
 t = 1:M;
 huffhist = zeros(16*16,1);
