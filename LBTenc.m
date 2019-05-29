@@ -108,7 +108,7 @@ if (opthuff==false)
     bits = dbits;
     huffval = dhuffval;
   end
-  fprintf(1,'Bits for coded image = %d\n', sum(vlc(:,2)));
+  %fprintf(1,'Bits for coded image = %d\n', sum(vlc(:,2)));
   return;
 end
 
@@ -119,7 +119,7 @@ disp('Generating huffcode and ehuf using custom tables')
 
 % Generate run/ampl values and code them into vlc(:,1:2).
 % Also generate a histogram of code symbols.
-disp('Coding rows (second pass)')
+%disp('Coding rows (second pass)')
 t = 1:M;
 huffhist = zeros(16*16,1);
 vlc = [];
@@ -138,8 +138,8 @@ for r=0:M:(sy(1)-M),
   end
   vlc = [vlc; vlc1];
 end
-fprintf(1,'Bits for coded image = %d\n', sum(vlc(:,2)))
-fprintf(1,'Bits for huffman table = %d\n', (16+max(size(dhuffval)))*8)
+%fprintf(1,'Bits for coded image = %d\n', sum(vlc(:,2)))
+%fprintf(1,'Bits for huffman table = %d\n', (16+max(size(dhuffval)))*8)
 
 if (nargout>1)
   bits = dbits;
