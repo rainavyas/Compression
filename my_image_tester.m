@@ -7,8 +7,9 @@ function scores = my_image_tester()
         baseFileName = myFiles(i).name;
         display(baseFileName)
         pause(5)
-        load(baseFileName)
-        
+        X = matfile(image_directory + "/" + baseFileName);
+        X = X.I
+        image(X)
         [N, step, error] = my_DCT_compressor_return(X);
         a = log2(N)-1; 
         scores(a,step) = scores(a,step)+1;

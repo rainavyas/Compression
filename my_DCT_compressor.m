@@ -1,39 +1,7 @@
 function my_DCT_compressor(X)
-    N = [4,8,16]
-     
-    N = 4;
-    step = 1;
-    bit_length = 1000000;
-    while bit_length > 50000,
-        try
-            vlc = jpegenc(X-128,step,N);
-            Z_4 = jpegdec(vlc,step,N);
-            bit_length = sum(vlc(:,2))
-        catch ME
-            display("error coding with step size")
-        end
-        step = step + 1
-    end
-    
-    N = 8;
-    step = 1;
-    bit_length = 1000000;
-    while bit_length > 50000,
-        try
-            vlc = jpegenc(X-128,step,N);
-            Z_8 = jpegdec(vlc,step,N);
-            bit_length = sum(vlc(:,2))
-        catch ME
-            display("error coding with step size")
-        end
-        step = step + 1
-    end
-=======
-function my_DCT_compressor(X)
     N_list = [4,8,16,32];
     Z_list = [X, X, X, X];
     [n,m] = size(X)
->>>>>>> a8eca9fb62f75b4c16ae4ea524c75620da60b39f
     
     for i = 1:length(N_list)
         pixel_start = 1 + (i-1)*n
