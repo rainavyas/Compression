@@ -1,0 +1,1 @@
+function [vlc bits huffval] = DWTenc(X, qstep, N, n, M, opthuff, dcbits)
