@@ -10,13 +10,13 @@ function [N,step] = final_DCT_compressor(X)
         step = 1;
         bit_length = 1000000;
         while bit_length > 40960,
+            step = step + 1;
             try
                 [vlc, bits, huffval] = jpegenc(X-128,step,N);
                 bit_length = sum(vlc(:,2));
             catch ME
                 display("error coding with step size")
             end
-            step = step + 1;
         end
         Z = jpegdec(vlc,step,N,N,bits,huffval,8);
         current_ssim = ssim(Z,X-128);

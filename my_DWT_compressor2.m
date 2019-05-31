@@ -1,7 +1,7 @@
 function my_DWT_compressor2(X)
     X = double(X);
-    N_list = [4,8,16,32];
-    M_list = [4,8,16,32];
+    N_list = [8,16,32];
+    M_list = [8,16,32];
     layer_list = [2,3,4];
     [n,m] = size(X)
     best_ssim = [-1.0, 0, 0, 0, 0, 0];
@@ -11,21 +11,23 @@ function my_DWT_compressor2(X)
         for i = 1:k
             for j = 1:length(layer_list)
                 N = N_list(i);
-                M = M_list(k)
+                M = M_list(k);
                 layers = layer_list(j);
                 step = 1;
                 bit_length = 1000000;
                 while bit_length > 40960 && step<256
+                    step = step + 1;
+                    pause(0.05)
                     try
-                        [vlc bits huffval] = DWTenc(X, step, N, layers, M, false, 8);
+                        [vlc bits huffval] = DWTenc(X, step, N, layers, M, true, 8);
                         bit_length = sum(vlc(:,2))
                     catch ME
                         display("error coding with step size")
                     end
-                    step = step + 1
                 end
+                
                 Z = DWTdec(vlc,step,layers,N,M,bits,huffval,8);
-
+                
                 current_ssim = ssim(Z,X);
                 display(current_ssim)
                 draw(Z)
