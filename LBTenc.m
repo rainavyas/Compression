@@ -108,12 +108,12 @@ if (opthuff==false)
     bits = dbits;
     huffval = dhuffval;
   end
-  %fprintf(1,'Bits for coded image = %d\n', sum(vlc(:,2)));
+  fprintf(1,'Bits for coded image = %d\n', sum(vlc(:,2)));
   return;
 end
 
 % Design custom huffman tables.
-disp('Generating huffcode and ehuf using custom tables')
+%disp('Generating huffcode and ehuf using custom tables')
 [dbits, dhuffval] = huffdes(huffhist);
 [huffcode, ehuf] = huffgen(dbits, dhuffval);
 

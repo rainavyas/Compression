@@ -68,6 +68,8 @@ for r=0:M:(sy(1)-M),
     yq = Yq(r+t,c+t);
     % Possibly regroup 
     if (M > N) yq = regroup(yq, N); end
+    %display(yq)
+    %pause(2)
     % Encode DC coefficient first
     yq(1) = yq(1) + 2^(dcbits-1);
     if ((yq(1)<0) | (yq(1)>(2^dcbits-1)))

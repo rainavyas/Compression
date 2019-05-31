@@ -47,7 +47,7 @@ end
 scan = diagscan(M);
 
 if (opthuff)
-  disp('Generating huffcode and ehuf using custom tables')
+  %disp('Generating huffcode and ehuf using custom tables')
 else
   %disp('Generating huffcode and ehuf using default tables')
   [bits huffval] = huffdflt(1);
