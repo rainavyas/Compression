@@ -1,12 +1,14 @@
 function scores = my_image_tester()
     image_directory = uigetdir;
     myFiles = dir(fullfile(image_directory,'*.mat')); 
-    scores = zeros(3,10)
+    scores = zeros(3,9)
     for i = 1:length(myFiles)
         baseFileName = myFiles(i).name;
         X = matfile(image_directory + "/" + baseFileName);
         X = X.I;
-        
+        figure(i)
+        draw(X)
+        figure(i+100)
         scheme = final_superscheme(X);
         switch scheme
             case 11
@@ -58,6 +60,6 @@ function scores = my_image_tester()
             case 38
                 scores(3,8) = scores(3,8)+1
             otherwise
-                disp('other value')
-end
+                scores(1,9) = scores(1,9)+1
+        end
     end

@@ -1,7 +1,7 @@
 function [ssim_value,N,s,step] = final_LBT_compressor(X)
     X = double(X);
     N_list = [8,16,32];
-    s_list = [1.0,1.2,1.4];
+    s_list = [1.0,1.25,1.5,1.75,2.0];
     best_ssim = [-1.0, 0, 0, 0, 0];
         
     for i = 1:length(N_list)

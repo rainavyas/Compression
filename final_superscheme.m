@@ -27,22 +27,22 @@ function score = final_superscheme(X)
     if LBT_ssim >= DCT_ssim && LBT_ssim >= DWT_ssim
        display("LBT encoding used")
        display("N/M : " + LBT_N + ", step : " + LBT_step + ", s: " + LBT_s)
-       display("RMS error : " + std(LBT_Z(:)-X(:)) + ", bits : " + (sum(LBT_Z(:,2))+1424)) 
+       display("RMS error : " + std(LBT_Z(:)-X(:)) + ", bits : " + (sum(LBT_vlc(:,2))+1424)) 
        %figure(1)
        %draw(X)
        %figure(2)
        draw(LBT_Z)
-       score = (log2(LBT_N)-2)*10+(LBT_s*4-3);
+       score = (log2(LBT_N)-2)*10+(LBT_s*4-2);
        return
     
     else
        display("DWT encoding used")
        display("N/M : " + DWT_N + ", step : " + DWT_step + ", # of layers : " + DWT_layers)
-       display("RMS error : " + std(DWT_Z(:)-X(:)) + ", bits : " + (sum(DWT_Z(:,2))+1424)) 
+       display("RMS error : " + std(DWT_Z(:)-X(:)) + ", bits : " + (sum(DWT_vlc(:,2))+1424)) 
        %figure(1)
        %draw(X)
        %figure(2)
        draw(DWT_Z)
-       score = (log2(DWT_N)-2)+(DWT_layers+4);
+       score = (log2(DWT_N)-2)*10+(DWT_layers+4);
        return
     end
