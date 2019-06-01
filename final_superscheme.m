@@ -32,7 +32,7 @@ function score = final_superscheme(X)
        %draw(X)
        %figure(2)
        draw(LBT_Z)
-       score = (log2(LBT_N)-2)*10+(LBT_s*4-2);
+       score = (log2(LBT_N)-2)*10+(LBT_s*5-3);
        return
     
     else

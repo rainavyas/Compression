@@ -37,7 +37,7 @@ Xp = X;
 Xp(t,:)=colxfm(Xp(t,:), Pf);
 Xp(:,t) = colxfm(Xp(:,t)',Pf)';
 
-[vlc, bits, huffval] = jpegenc(X, qstep, N, M, opthuff, dcbits);
+[vlc, bits, huffval] = jpegenc(Xp, qstep, N, M, opthuff, dcbits);
 
 return
 

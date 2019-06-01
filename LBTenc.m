@@ -61,7 +61,7 @@ Xp(:,t) = colxfm(Xp(:,t)',Pf)';
 % DCT on input image X.
 %fprintf(1, 'Forward %i x %i DCT\n', N, N);
 C8=dct_ii(N);
-Y=colxfm(colxfm(X,C8)',C8)'; 
+Y=colxfm(colxfm(Xp,C8)',C8)'; 
 
 % Quantise to integers.
 %fprintf(1, 'Quantising to step size of %i\n', qstep); 
@@ -108,7 +108,7 @@ if (opthuff==false)
     bits = dbits;
     huffval = dhuffval;
   end
-  fprintf(1,'Bits for coded image = %d\n', sum(vlc(:,2)));
+  %fprintf(1,'Bits for coded image = %d\n', sum(vlc(:,2)));
   return;
 end
 
