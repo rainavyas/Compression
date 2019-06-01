@@ -1,7 +1,7 @@
 function scores = my_image_tester()
     image_directory = uigetdir;
     myFiles = dir(fullfile(image_directory,'*.mat')); 
-    scores = zeros(3,9)
+    scores = zeros(3,10)
     for i = 1:length(myFiles)
         baseFileName = myFiles(i).name;
         display(baseFileName)
@@ -60,6 +60,12 @@ function scores = my_image_tester()
                 scores(2,8) = scores(2,8)+1
             case 38
                 scores(3,8) = scores(3,8)+1
+            case 19
+                scores(1,9) = scores(1,9)+1
+            case 29
+                scores(2,9) = scores(2,9)+1
+            case 39
+                scores(3,9) = scores(3,9)+1
             otherwise
                 scores(1,9) = scores(1,9)+1
         end

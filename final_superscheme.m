@@ -43,6 +43,6 @@ function score = final_superscheme(X)
        %draw(X)
        %figure(2)
        draw(DWT_Z)
-       score = (log2(DWT_N)-2)*10+(DWT_layers+4);
+       score = (log2(DWT_N)-2)*10+(DWT_layers+5);
        return
     end
