@@ -46,17 +46,37 @@ if (nargin<6)
 end
  if ((opthuff==true) && (nargout==1)) error('Must output bits and huffval if optimising huffman tables'); end
  
+
+ 
 % DCT on input image X.
 %fprintf(1, 'Forward %i x %i DCT\n', N, N);
 C8=dct_ii(N);
 Y=colxfm(colxfm(X,C8)',C8)'; 
+
+%Get DC components for hierarchical design
+sy=size(Y);
+t = 1:M;
+
+DC_matrix = zeros(M);
+for r=0:M:(sy(1)-M),
+  for c=0:M:(sy(2)-M),
+    DC_r = (r/M)+1;
+    DC_c = (c/M)+1;
+    y = Y(r+t,c+t);
+    DC_matrix(DC_r,DC_c) = y(1);
+  end
+end
+
+Y_DC = colxfm(colxfm(DC_matrix,C8)',C8)';
+Y_DC = quant1(Y_DC,2,2);
+vlc_DC = jpegenc(Y_DC, 2, 64/N, 64/N, 0, 16);
 
 % Quantise to integers.
 %fprintf(1, 'Quantising to step size of %i\n', qstep); 
 Yq=quant1(Y,qstep,qstep);
 
 % Generate zig-zag scan of AC coefs.
-scan = my_diagscan(M);
+scan = diagscan(M);
 
 % On the first pass use default huffman tables.
 %disp('Generating huffcode and ehuf using default tables')
@@ -66,33 +86,6 @@ scan = my_diagscan(M);
 % Generate run/ampl values and code them into vlc(:,1:2).
 % Also generate a histogram of code symbols.
 %disp('Coding rows')
-sy=size(Yq);
-t = 1:M;
-
-
-C4=dct_ii(N/2);
-
-DC_matrix = zeros(M);
-for r=0:M:(sy(1)-M),
-  for c=0:M:(sy(2)-M),
-    DC_r = (r/M)+1;
-    DC_c = (c/M)+1;
-    yq = Yq(r+t,c+t);
-    DC_matrix(DC_r,DC_c) = yq(1);
-  end
-end
-
-Y_DC = colxfm(colxfm(DC_matrix,C4)',C4)';
-Y_DC = quantise(Y_DC,1,1.5);
-
-for r=0:M:(sy(1)-M),
-  for c=0:M:(sy(2)-M),
-    DC_r = (r/M)+1;
-    DC_c = (c/M)+1;
-    Yq(r+1,c+1) = Y_DC(DC_r,DC_c);
-  end
-end
-
 huffhist = zeros(16*16,1);
 vlc = [];
 for r=0:M:(sy(1)-M),
@@ -107,6 +100,8 @@ for r=0:M:(sy(1)-M),
   end
   vlc = [vlc; vlc1];
 end
+
+vlc = [vlc; vlc_DC];
 
 % Return here if the default tables are sufficient, otherwise repeat the
 % encoding process using the custom designed huffman tables.
@@ -136,7 +131,7 @@ for r=0:M:(sy(1)-M),
     yq = Yq(r+t,c+t);
     % Possibly regroup 
     if (M > N) yq = regroup(yq, N); end
- 
+    
     % Encode the other AC coefficients in scan order
     ra1 = runampl(yq(scan));
     vlc1 = [vlc1; huffenc(ra1, ehuf)]; % huffenc() also updates huffhist.
@@ -147,8 +142,9 @@ end
 %fprintf(1,'Bits for huffman table = %d\n', (16+max(size(dhuffval)))*8)
 
 if (nargout>1)
-  bits = dbits;
+  bits = [dbits];
   huffval = dhuffval';
 end
 
+vlc = [vlc; vlc_DC];
 return

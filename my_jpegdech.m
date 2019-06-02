@@ -44,7 +44,7 @@ if (nargin<9)
 end
 
 % Set up standard scan sequence
-scan = my_diagscan(M);
+scan = diagscan(M);
 
 if (opthuff)
   %disp('Generating huffcode and ehuf using custom tables')
@@ -123,36 +123,32 @@ for r=0:M:(H-M),
   end
 end
 
-sy=size(Zq);
-t = 1:M;
-C4=dct_ii(N/2);
-
-% Inverse transform the DC components
-DC_matrix = zeros(M);
-for r=0:M:(sy(1)-M),
-  for c=0:M:(sy(2)-M),
-    DC_r = (r/M)+1;
-    DC_c = (c/M)+1;
-    yq = Zq(r+t,c+t);
-    DC_matrix(DC_r,DC_c) = yq(1);
-  end
-end
-
-Z_DC = colxfm(colxfm(DC_matrix',C4')',C4');
-
-for r=0:M:(sy(1)-M),
-  for c=0:M:(sy(2)-M),
-    DC_r = (r/M)+1;
-    DC_c = (c/M)+1;
-    Zq(r+1,c+1) = Z_DC(DC_r,DC_c);
-  end
-end
-
 %fprintf(1, 'Inverse quantising to step size of %i\n', qstep);
 Zi=quant2(Zq,qstep,qstep);
+
+%Putting the DC values back in the matrix
+sy=size(Zq);
+t = 1:M;
+C8=dct_ii(N);
+W = sy(1)/M;
+H = sy(2)/M;
+
+vlc_DC = vlc(i:end,1:2);
+[bits huffval] = huffdflt(1);
+DCT_matrix = jpegdec(vlc_DC,2, 64/N, 64/N, bits, huffval, 16, W, H);
+
+DCT_matrix = quant2(DCT_matrix,2,2);
+Z_DC = colxfm(colxfm(DCT_matrix',C8')',C8');
+
+for r=0:M:(sy(1)-M),
+  for c=0:M:(sy(2)-M),
+    DC_r = (r/M)+1;
+    DC_c = (c/M)+1;
+    Zi(r+1,c+1) = Z_DC(DC_r,DC_c);
+  end
+end
 
 %fprintf(1, 'Inverse %i x %i DCT\n', N, N);
 C8=dct_ii(N);
 Z=colxfm(colxfm(Zi',C8')',C8');
-draw(Z)
 return
