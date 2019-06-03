@@ -1,18 +1,18 @@
 function [ssim_value,N,s,step, cutoff] = final_LBT_compressor(X)
     X = double(X);
     N_list = [8,16,32];
-    s_list = [1.2,1.4,1.6];
+    s_list = [1.2,1.4,1.6,1.8];
     best_ssim = [-1.0, 0, 0, 0, 0];
             
     for i = 1:length(N_list)
         for j = 1:length(s_list)
             N = N_list(i);
             s = s_list(j);
-            for cutoff = N/2: 4: 2*N
+            for cutoff = N/4: 1: 2*N
             step = 1;
             bit_length = 1000000;
-            while bit_length > 39536 && step<256
-                step = step + 1;
+            while bit_length > 39520 && step<256
+                step = step + 0.5;
                 try
                     [vlc, bits, huffval] = LBTenc(X-128, step, s, N, N, true, 8, cutoff);
                     bit_length = sum(vlc(:,2));
