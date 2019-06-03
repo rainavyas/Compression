@@ -9,7 +9,7 @@ function [ssim_value, N, step, cutoff] = final_DCT_compressor(X)
         
     for i = 1:length(N_list)
         N = N_list(i);
-        for cutoff = N/2: 1: 2*N
+        for cutoff = N/2: 4: 2*N
         step = 0.5;
         bit_length = 1000000;
         while bit_length > 39500 && step<256,

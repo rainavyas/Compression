@@ -8,7 +8,7 @@ function [ssim_value,N,s,step, cutoff] = final_LBT_compressor(X)
         for j = 1:length(s_list)
             N = N_list(i);
             s = s_list(j);
-            for cutoff = N/2: 1: 2*N
+            for cutoff = N/2: 4: 2*N
             step = 1;
             bit_length = 1000000;
             while bit_length > 39536 && step<256
