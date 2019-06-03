@@ -141,4 +141,6 @@ t = [(1+N/2):(n-N/2)];
 Zp = Z;
 Zp(:,t) = colxfm(Zp(:,t)',Pr')';   
 Zp(t,:) = colxfm(Zp(t,:),Pr');
+
+Zp = uint8(Zp+128);
 return

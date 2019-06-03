@@ -4,16 +4,16 @@ function [ssim_value, N, step, cutoff] = final_DCT_compressor(X)
 %suppressed in dct of the image (suppressed means to set the intensities to
 %zero- done to the high frequency pixels
     X = double(X);
-    N_list = [8,16,32];
+    N_list = [8,16];
     best_ssim = [-1.0, 0, 0, 0, 0];
         
     for i = 1:length(N_list)
         N = N_list(i);
-        for cutoff = N/4: 1: 2*N
+        for cutoff = N/2: 2: 2*N
         step = 10;
         bit_length = 1000000;
         while bit_length > 39520 && step<256,
-            step = step + 0.5;
+            step = step + 1;
             try
                 [vlc, bits, huffval] = jpegenc_suppression(X-128,step,N,N,1,8, cutoff);
                 bit_length = sum(vlc(:,2));
